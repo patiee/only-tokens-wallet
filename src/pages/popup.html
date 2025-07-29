@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Keplr-Like Wallet</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="app">
+      <h1>Keplr-Like Wallet</h1>
+      <button id="openSidePanel">Open Side Panel</button>
+      <div id="setup" style="display: none">
+        <h2>Create or Import Wallet</h2>
+        <button id="createWallet">Create New Wallet</button>
+        <button id="importWallet">Import Wallet</button>
+      </div>
+      <div id="wallet" style="display: none">
+        <h2>Wallet</h2>
+        <p><strong>Address:</strong> <span id="address"></span></p>
+        <p>
+          <strong>Balance:</strong> <span id="balance">0 (Placeholder)</span>
+        </p>
+        <button id="showMnemonic">Show Mnemonic (Warning: Sensitive!)</button>
+        <button id="logout">Logout</button>
+      </div>
+      <div id="mnemonic" style="display: none">
+        <h2>Your Mnemonic Phrase</h2>
+        <p id="mnemonicText"></p>
+        <p>
+          <strong>Warning:</strong> Store this securely. Anyone with this phrase
+          can access your funds!
+        </p>
+        <button id="backToWallet">Back</button>
+      </div>
+    </div>
+    <script src="node_modules/bip39/dist/bip39.js"></script>
+    <script src="node_modules/crypto-js/crypto-js.js"></script>
+    <script src="popup.js"></script>
+    <script src="ethers.umd.min.js"></script>
+    <script src="bip39.js"></script>
+    <script src="crypto-js.js"></script>
+  </body>
+</html>

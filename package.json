@@ -1,0 +1,26 @@
+{
+  "name": "only-tokens-wallet",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "@evmexplorer/blockscout": "0.0.22",
+    "bip39": "^3.1.0",
+    "crypto-js": "^4.2.0",
+    "ethers": "^6.15.0"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.1.1",
+    "@types/crypto-js": "^4.2.2",
+    "typescript": "^5.8.3"
+  },
+  "scripts": {
+    "build": "tsc && node scripts/build_manifest.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "module": "ESNext",
+  "target": "ES2020",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
