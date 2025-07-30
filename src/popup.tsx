@@ -29,12 +29,35 @@ export const renderPopupInNewWindow: RenderFunction = (newWindow: Window) => {
   };
 };
 
+const renderCreateWallet = (
+  setIsWallet: any,
+  createWallet: any,
+  importWallet: any
+) => {
+  return (
+    <>
+      <button onClick={() => createWallet()} style={{ marginRight: "5px" }}>
+        Create wallet
+      </button>
+      <button
+        onClick={() => {
+          importWallet();
+          setIsWallet();
+        }}
+        style={{ padding: "5px", width: '100%' }}
+      >
+        Import wallet
+      </button>
+    </>
+  );
+};
+
 // Function to open a new window and render content
 export function openInNewWindow(renderFn: RenderFunction): void {
   const newWindow = window.open(
     "popup.html", // No URL; you can write to it with `document.write`
     "walletPopup", // Window name
-    "width=400,height=600,toolbar=0,location=0,status=0,menubar=0,scrollbars=1,resizable=1"
+    "width=380,height=600,toolbar=0,location=0,status=0,menubar=0,scrollbars=1,resizable=1"
   );
 
   if (newWindow) {
@@ -53,6 +76,7 @@ export function openInNewWindow(renderFn: RenderFunction): void {
 
 const Popup = () => {
   const [isConnected, setIsConnected] = useState(false);
+  const [isWallet, setIsWallet] = useState(false);
 
   const handleOpenInNewWindow = () => {
     openInNewWindow(renderPopupInNewWindow);
@@ -67,19 +91,29 @@ const Popup = () => {
   };
 
   return (
-    <>
-      <ul style={{ minWidth: "100px" }}>
-        <li>Only Tokens</li>
-      </ul>
-      <button onClick={() => createWallet()} style={{ marginRight: "5px" }}>
-        Create wallet
-      </button>
-      <button onClick={() => importWallet()} style={{ marginRight: "5px" }}>
-        Import wallet
-      </button>
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        minWidth: "350px",
+        minHeight: "550px",
+        backgroundColor: "#ffedffff",
+        overflowY: "auto",
+        padding: "5px 10px",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "start",
+        overflow: "wrap"
+      }}
+    >
+      <h3 style={{ textAlign: "center" }}>wallet here</h3>
+      {isWallet
+        ? null
+        : renderCreateWallet(setIsWallet, createWallet, importWallet)}
+
       {isConnected ? "connected" : "not connected"}
       <button onClick={handleOpenInNewWindow}>Open Popup in New Window</button>
-    </>
+    </div>
   );
 };
 
