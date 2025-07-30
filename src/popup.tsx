@@ -5,6 +5,7 @@ import { renderStartView } from "./start";
 import { CreateWallet } from "./create_mnemonic";
 
 import * as bip39 from "bip39";
+import { CreatePassword } from "./create_password";
 
 const styles: { [key: string]: React.CSSProperties } = {
   popup: {
@@ -34,11 +35,10 @@ const styles: { [key: string]: React.CSSProperties } = {
   },
 };
 
-
-
 const Popup = () => {
   const [isConnected, setIsConnected] = useState(false);
   const [isStart, setIsStart] = useState(false);
+  const [isSetPassowrd, setIsSetPassword] = useState(false);
   const [create, setCreate] = useState(false);
 
   const [newMnemonic, setNewMnemonic] = useState<string[]>([]);
@@ -63,11 +63,19 @@ const Popup = () => {
     setIsConnected(!isConnected);
   };
 
+  const setCreatePassword = () => {
+    setIsSetPassword(!isSetPassowrd);
+    setCreate(!create);
+  };
+
   return (
     <div style={styles["popup"]}>
       <h3 style={{ textAlign: "center" }}>wallet here</h3>
       {isStart ? null : renderStartView(createWallet, importWallet)}
-      {create ? <CreateWallet mnemonic={newMnemonic}/> : null}
+      {create ? (
+        <CreateWallet mnemonic={newMnemonic} next={setCreatePassword} />
+      ) : null}
+      {isSetPassowrd ? <CreatePassword mnemonic={newMnemonic} /> : null}
       {/* {isStart ? "start" : "not start"}
       {isConnected ? "connected" : "not connected"} */}
       <button onClick={handleOpenInNewWindow}>Open Popup in New Window</button>

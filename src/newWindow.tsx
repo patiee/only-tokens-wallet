@@ -13,7 +13,10 @@ export function openInNewWindow(viewComponent: JSX.Element): void {
 
   const timer = setInterval(() => {
     try {
-      if (newWindow.document.readyState === "complete" && newWindow.document.getElementById("root")) {
+      if (
+        newWindow.document.readyState === "complete" &&
+        newWindow.document.getElementById("root")
+      ) {
         clearInterval(timer);
         (newWindow as any).initialView = viewComponent;
 

@@ -15,10 +15,7 @@ const styles: { [key: string]: React.CSSProperties } = {
   },
 };
 
-export const renderStartView = (
-  createWallet: any,
-  importWallet: any
-) => {
+export const renderStartView = (createWallet: any, importWallet: any) => {
   return (
     <>
       {/* <div style={{width: "100%"}}></div> */}

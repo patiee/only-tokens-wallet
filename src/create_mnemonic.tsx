@@ -11,15 +11,15 @@ const styles: { [key: string]: React.CSSProperties } = {
     fontFamily: "sans-serif",
   },
   mnemonicBox: {
-  display: "grid",
-  gridTemplateColumns: "1fr 1fr",
-  gap: "10px",
-  backgroundColor: "#fff",
-  padding: "15px",
-  borderRadius: "8px",
-  boxShadow: "0 0 5px rgba(0,0,0,0.1)",
-  fontSize: "16px",
-  lineHeight: "1.6",
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: "10px",
+    backgroundColor: "#fff",
+    padding: "15px",
+    borderRadius: "8px",
+    boxShadow: "0 0 5px rgba(0,0,0,0.1)",
+    fontSize: "16px",
+    lineHeight: "1.6",
   },
   mnemonicWord: {
     marginBottom: "10px",
@@ -35,17 +35,44 @@ const styles: { [key: string]: React.CSSProperties } = {
     fontWeight: "bold",
     color: "#555",
   },
+  copyContainer: {
+    textAlign: "right",
+  },
+  copyButton: {
+    backgroundColor: "#dfa8d5",
+    borderRadius: "5px",
+  },
+  nextButton: {
+    padding: "5px",
+    width: "100%",
+    margin: "10px 0",
+    backgroundColor: "#dfa8d5",
+    borderRadius: "5px",
+    fontSize: "20px",
+  },
 };
 
 interface CreateWalletProps {
   mnemonic: string[];
+  next: () => void;
 }
 
-export const CreateWallet: React.FC<CreateWalletProps> = ({ mnemonic }) => {
+export const CreateWallet: React.FC<CreateWalletProps> = ({
+  mnemonic,
+  next,
+}) => {
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(mnemonic.join(" "));
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
+  };
+
   return (
-    <div style={styles['container']}>
-      <h2>Generated Mnemonic</h2>
-      <div style={styles['mnemonicBox']}>
+    <div style={styles["container"]}>
+      <h2>Your mnemonic</h2>
+      <div style={styles["mnemonicBox"]}>
         {mnemonic.map((word, index) => (
           <div key={index} style={styles["mnemonicWord"]}>
             <span style={styles["wordIndex"]}>{index + 1}.</span>
@@ -53,6 +80,15 @@ export const CreateWallet: React.FC<CreateWalletProps> = ({ mnemonic }) => {
           </div>
         ))}
       </div>
+      <div style={styles["copyContainer"]}>
+        <button style={styles["copyButton"]} onClick={copyToClipboard}>
+          copy
+        </button>
+      </div>
+      <p>Keep it in safe place and do not share with anyone</p>
+      <button style={styles["nextButton"]} onClick={next}>
+        I understand
+      </button>
     </div>
   );
 };
