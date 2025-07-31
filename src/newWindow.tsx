@@ -20,13 +20,10 @@ export function openInNewWindow(viewComponent: JSX.Element): void {
         clearInterval(timer);
         (newWindow as any).initialView = viewComponent;
 
-        // Force reload to re-execute popup.tsx now that `initialView` is set
         newWindow.location.reload();
 
-        window.close()
+        window.close();
       }
-    } catch (e) {
-      // The new window may not be accessible immediately (race condition), retry
-    }
+    } catch (e) {}
   }, 100);
 }
