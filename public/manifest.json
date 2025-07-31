@@ -10,7 +10,7 @@
   "content_scripts": [
       {
           "matches": ["<all_urls>"],
-          "js": ["js/vendor.js", "js/ex_script.js", "js/create_password.js", "js/create_mnemonic.js"]
+          "js": ["js/vendor.js", "js/ex_script.js", "js/create_password.js", "js/create_mnemonic.js", "js/dashboard.js"]
       }
   ],
   "background": {

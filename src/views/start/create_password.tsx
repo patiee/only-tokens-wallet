@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import bcrypt from "bcryptjs";
 
-import { createDeterministicBcryptSalt, saveToStorageEncrypted } from "../../storage";
+import {
+  createDeterministicBcryptSalt,
+  saveToStorageEncrypted,
+} from "../../storage";
 
 const styles: { [key: string]: React.CSSProperties } = {
   container: {

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { CreateWallet } from "./create_mnemonic";
 import * as bip39 from "bip39";
 import { CreatePassword } from "./create_password";
-import {  doesStorageKeyExist, isUnlocked } from "../../storage";
+import { doesStorageKeyExist, isUnlocked } from "../../storage";
 import { Unlock } from "./unlock";
 
 const styles: { [key: string]: React.CSSProperties } = {
@@ -20,7 +20,11 @@ const styles: { [key: string]: React.CSSProperties } = {
   },
 };
 
-export const StartView: React.FC = () => {
+interface StartViewProps {
+  next: () => void;
+}
+
+export const StartView: React.FC<StartViewProps> = ({ next }) => {
   const [isConnected, setIsConnected] = useState(false);
   const [unlocked, setUnlocked] = useState(false);
   const [create, setCreate] = useState(false);
@@ -32,10 +36,13 @@ export const StartView: React.FC = () => {
     const checkIsUnlocked = async () => {
       const mnemonicExists = await doesStorageKeyExist("mnemonic");
       setIsConnected(mnemonicExists);
-      setUnlocked(await isUnlocked());
+      const checkIsUnlocked = await isUnlocked();
+      setUnlocked(checkIsUnlocked);
+      if (checkIsUnlocked) {
+        next();
+      }
     };
 
-    // clearStorage()
     checkIsUnlocked();
   }, []);
 
@@ -61,7 +68,7 @@ export const StartView: React.FC = () => {
   const setFinishCreatePassword = () => {
     setIsSetPassword(false);
     setCreate(false);
-    setIsConnected(true)
+    setIsConnected(true);
     setUnlocked(true);
   };
 
@@ -93,8 +100,13 @@ export const StartView: React.FC = () => {
           ) : null}
         </>
       ) : !unlocked ? (
-        <Unlock next={() => {setIsConnected(true);setUnlocked(true)}} />
-      ): null}
+        <Unlock
+          next={() => {
+            setIsConnected(true);
+            setUnlocked(true);
+          }}
+        />
+      ) : null}
     </>
   );
 };

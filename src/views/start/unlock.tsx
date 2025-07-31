@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import bcrypt from "bcryptjs";
 
 import {
-    createDeterministicBcryptSalt,
+  createDeterministicBcryptSalt,
   getFromStorageAndDecrypt,
   lockExtension,
   unlockExtension,

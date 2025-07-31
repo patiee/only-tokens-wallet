@@ -13,6 +13,7 @@ module.exports = {
       create_mnemonic: path.join(srcDir, 'views/start/create_mnemonic.tsx'),
       start: path.join(srcDir, 'views/start/start.tsx'),
       utils: path.join(srcDir, 'utils.ts'),
+      start: path.join(srcDir, 'views/dashboard/dashboard.tsx'),
     },
     output: {
         path: path.join(__dirname, "../dist/js"),

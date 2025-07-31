@@ -31,9 +31,17 @@ const Popup = () => {
   return (
     <div style={styles["popup"]}>
       <h3 style={{ textAlign: "center" }}>wallet here</h3>
-      {isStart ? <StartView /> : null}
+      {isStart ? <StartView next={() => setIsStart(false)} /> : null}
       <button onClick={handleOpenInNewWindow}>Open Popup in New Window</button>
-      <button onClick={() => {setIsStart(!isStart);clearStorage();lockExtension()}}>Start</button>
+      <button
+        onClick={() => {
+          setIsStart(!isStart);
+          clearStorage();
+          lockExtension();
+        }}
+      >
+        Start
+      </button>
     </div>
   );
 };
