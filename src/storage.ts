@@ -1,13 +1,9 @@
-import { write } from "./utils";
-
 let sessionKey: CryptoKey | null = null;
 let lockTimer: NodeJS.Timeout | null = null;
 
 export async function unlockExtension(passphrase: string) {
   const salt = await generateSaltFromString(passphrase);
-  write(`unlockExtension ${passphrase} ${salt}`);
   sessionKey = await deriveKey(passphrase, salt);
-  write(`sessionKey ${sessionKey}`);
   lockTimer = setTimeout(() => {
     sessionKey = null;
   }, 60 * 60 * 1000); // 1 hour
@@ -51,9 +47,6 @@ export async function saveToStorageEncrypted(
     );
     const ivString = btoa(String.fromCharCode(...Array.from(iv)));
 
-    write(
-      `saveToStorageEncrypted key: ${key} value: ${value} passphrase: ${passphrase} encryptedString: ${encryptedString} iv: ${iv}`
-    );
     chrome.storage.local.set(
       {
         [key]: {
@@ -146,11 +139,6 @@ export async function getFromStorageAndDecrypt(
         const ivArray = decodeBase64(storedData.iv);
         // const decoder = new TextDecoder("utf-8");
 
-        write(`Try decrypt`);
-        write(
-          `getFromStorageAndDecrypt key: ${key} sessionKey: ${sessionKey} encryptedString: ${storedData.encrypted} iv: ${ivArray}`
-        );
-
         const decrypted = await decrypt(
           encryptedData,
           ivArray as BufferSource,
@@ -158,8 +146,6 @@ export async function getFromStorageAndDecrypt(
         );
         resolve(decrypted);
       } catch (error) {
-        console.error("Decryption error:", error);
-        write(`Decryption error: ${error}`);
         reject(error);
       }
     });
@@ -172,7 +158,6 @@ async function decrypt(
   key: CryptoKey
 ): Promise<string> {
   try {
-    console.log("Decrypting with iv type:", iv.constructor.name);
     const decrypted = await crypto.subtle.decrypt(
       {
         name: "AES-GCM",
@@ -184,7 +169,6 @@ async function decrypt(
     const decoder = new TextDecoder();
     return decoder.decode(decrypted);
   } catch (error) {
-    console.error("Decryption error:", error);
     throw error;
   }
 }
@@ -193,7 +177,6 @@ export async function doesStorageKeyExist(key: string): Promise<boolean> {
   return new Promise((resolve) => {
     chrome.storage.local.get([key], (result) => {
       if (chrome.runtime.lastError) {
-        console.error("Storage error:", chrome.runtime.lastError);
         resolve(false);
         return;
       }
