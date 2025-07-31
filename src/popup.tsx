@@ -75,9 +75,7 @@ const Popup = () => {
       {create ? (
         <CreateWallet mnemonic={newMnemonic} next={setCreatePassword} />
       ) : null}
-      {isSetPassowrd ? <CreatePassword mnemonic={newMnemonic} /> : null}
-      {/* {isStart ? "start" : "not start"}
-      {isConnected ? "connected" : "not connected"} */}
+      {isSetPassowrd ? <CreatePassword mnemonic={newMnemonic}/> : null}
       <button onClick={handleOpenInNewWindow}>Open Popup in New Window</button>
     </div>
   );

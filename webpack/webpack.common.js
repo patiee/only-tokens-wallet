@@ -9,6 +9,8 @@ module.exports = {
       popup: path.join(srcDir, 'popup.tsx'),
       background: path.join(srcDir, 'background.ts'),
       ex_script: path.join(srcDir, 'ex_script.tsx'),
+      create_password: path.join(srcDir, 'create_password.tsx'),
+      create_mnemonic: path.join(srcDir, 'create_mnemonic.tsx'),
     },
     output: {
         path: path.join(__dirname, "../dist/js"),
