@@ -18,7 +18,8 @@
         "js/dashboard.js",
         "js/chains.js",
         "js/cosmos.js",
-        "js/dogecoin.js"
+        "js/dogecoin.js",
+        "js/evm.js"
       ]
     }
   ],

@@ -15,9 +15,15 @@ interface Dogecoin {
   sign(chainId: string): Promise<string>;
 }
 
+interface Evm {
+  enable(chainId: string): Promise<void>;
+  sign(chainId: string): Promise<string>;
+}
+
 interface Window {
   only: {
     cosmos?: Cosmos | undefined;
     dogecoin?: Dogecoin | undefined;
+    evm?: Evm | undefined;
   };
 }
