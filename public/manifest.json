@@ -17,7 +17,8 @@
         "js/create_mnemonic.js",
         "js/dashboard.js",
         "js/chains.js",
-        "js/cosmos.js"
+        "js/cosmos.js",
+        "js/dogecoin.js"
       ]
     }
   ],

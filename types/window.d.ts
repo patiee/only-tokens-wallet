@@ -10,8 +10,14 @@ interface OfflineSigner {
   signDirect(signerAddress: string, signDoc: any): Promise<any>;
 }
 
+interface Dogecoin {
+  enable(chainId: string): Promise<void>;
+  sign(chainId: string): Promise<string>;
+}
+
 interface Window {
   only: {
-    cosmos: Cosmos | undefined;
+    cosmos?: Cosmos | undefined;
+    dogecoin?: Dogecoin | undefined;
   };
 }

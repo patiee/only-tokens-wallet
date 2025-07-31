@@ -17,10 +17,12 @@ module.exports = {
       dashboard: path.join(srcDir, 'views/dashboard/dashboard.tsx'),
       chains: path.join(srcDir, 'wallet/chains.ts'),
       cosmos: path.join(srcDir, 'wallet/cosmos.ts'),
+      dogecoin: path.join(srcDir, 'wallet/dogecoin.ts'),
     },
     output: {
         path: path.join(__dirname, "../dist/js"),
         filename: "[name].js",
+        clean: true
     },
     optimization: {
         splitChunks: {
