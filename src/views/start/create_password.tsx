@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
+import bcrypt from "bcryptjs";
+
 import { write } from "../../utils";
+import { createDeterministicBcryptSalt, saveToStorageEncrypted } from "../../storage";
 
 const styles: { [key: string]: React.CSSProperties } = {
   container: {
@@ -43,12 +46,21 @@ const styles: { [key: string]: React.CSSProperties } = {
 
 interface CreatePasswordProps {
   mnemonic: string[];
+  next: () => void;
 }
 
-export const CreatePassword: React.FC<CreatePasswordProps> = ({}) => {
+export const CreatePassword: React.FC<CreatePasswordProps> = ({
+  mnemonic,
+  next,
+}) => {
   const [isOk, setIsOk] = useState(false);
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
+
+  useEffect(() => {
+    setPasswordIsOk();
+  });
+
   const setPasswordIsOk = () => {
     write(`Validating:, { ${password}, ${password2} }`);
 
@@ -68,9 +80,13 @@ export const CreatePassword: React.FC<CreatePasswordProps> = ({}) => {
     }
   };
 
-  useEffect(() => {
-    setPasswordIsOk();
-  });
+  const createPassword = async () => {
+    const salt = await createDeterministicBcryptSalt(password);
+    const hash = await bcrypt.hash(password, salt);
+    write(`saveToStorageEncrypted ${hash} ${salt}`)
+    await saveToStorageEncrypted("mnemonic", mnemonic.join(" "), hash);
+    next();
+  };
 
   return (
     <div style={styles["container"]}>
@@ -93,6 +109,7 @@ export const CreatePassword: React.FC<CreatePasswordProps> = ({}) => {
       <button
         style={isOk ? styles["nextButton"] : styles["nextButtonDisabled"]}
         disabled={!isOk}
+        onClick={createPassword}
       >
         Create password
       </button>

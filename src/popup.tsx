@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { createRoot } from "react-dom/client";
 import { openInNewWindow } from "./newWindow";
 import { StartView } from "./views/start/start";
+import { clearStorage } from "./storage";
 
 const styles: { [key: string]: React.CSSProperties } = {
   popup: {
@@ -32,7 +33,7 @@ const Popup = () => {
       <h3 style={{ textAlign: "center" }}>wallet here</h3>
       {isStart ? <StartView /> : null}
       <button onClick={handleOpenInNewWindow}>Open Popup in New Window</button>
-       <button onClick={() =>setIsStart(!isStart)}>Start</button>
+      <button onClick={() => {setIsStart(!isStart);clearStorage()}}>Start</button>
     </div>
   );
 };
