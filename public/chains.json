@@ -1,6 +1,28 @@
 [
   {
     "chainId": "osmo-test-5",
-    "prefix": "osmo"
+    "type": "cosmos",
+    "config": {
+      "prefix": "osmo"
+    }
+  },
+  {
+    "chainId": "568",
+    "type": "dogecoin",
+    "config": {
+      "messagePrefix": "\\x19Dogecoin Signed Message:\n",
+      "bech32": "tdoge",
+      "bip32": {
+        "public": "0x043587cf",
+        "private": "0x04358394"
+      },
+      "pubKeyHash": "0x71",
+      "scriptHash": "0xc4",
+      "wif": "0xf1"
+    }
+  },
+  {
+    "chainId": "80002",
+    "type": "evm"
   }
 ]
