@@ -29,14 +29,14 @@ export const StartView: React.FC = () => {
   const [isSetPassowrd, setIsSetPassword] = useState(false);
 
   useEffect(() => {
-    const checkMnemonic = async () => {
+    const checkIsUnlocked = async () => {
       const mnemonicExists = await doesStorageKeyExist("mnemonic");
       setIsConnected(mnemonicExists);
+      setUnlocked(await isUnlocked());
     };
 
     // clearStorage()
-    checkMnemonic();
-    setUnlocked(isUnlocked());
+    checkIsUnlocked();
   }, []);
 
   const generateMnemonic = () => {
@@ -61,12 +61,13 @@ export const StartView: React.FC = () => {
   const setFinishCreatePassword = () => {
     setIsSetPassword(false);
     setCreate(false);
+    setIsConnected(true)
+    setUnlocked(true);
   };
 
   return (
     <>
-      {/* <div style={{width: "100%"}}></div> */}
-      {!create && !isImport ? (
+      {!create && !isImport && !unlocked ? (
         <img src="icon128.png" style={styles["imageStyle"]} />
       ) : null}
       {!isConnected && !unlocked ? (
@@ -91,9 +92,9 @@ export const StartView: React.FC = () => {
             />
           ) : null}
         </>
-      ) : (
-        <Unlock next={() => setIsConnected(true)} />
-      )}
+      ) : !unlocked ? (
+        <Unlock next={() => {setIsConnected(true);setUnlocked(true)}} />
+      ): null}
     </>
   );
 };

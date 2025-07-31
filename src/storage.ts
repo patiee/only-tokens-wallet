@@ -1,37 +1,93 @@
-let sessionKey: CryptoKey | null = null;
-let lockTimer: NodeJS.Timeout | null = null;
-
-export async function unlockExtension(passphrase: string) {
-  const salt = await generateSaltFromString(passphrase);
-  sessionKey = await deriveKey(passphrase, salt);
-  lockTimer = setTimeout(() => {
-    sessionKey = null;
-  }, 60 * 60 * 1000); // 1 hour
+export async function unlockExtension(passphrase: string): Promise<boolean> {
+  return new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage(
+      { action: "unlock", passphrase },
+      (response: { success: boolean; error?: string }) => {
+        if (chrome.runtime.lastError) {
+          reject(new Error(chrome.runtime.lastError.message));
+        } else if (response.success) {
+          resolve(true);
+        } else {
+          reject(new Error(response.error || "Failed to unlock"));
+        }
+      }
+    );
+  });
 }
 
-export function lockExtension() {
-  if (lockTimer) clearTimeout(lockTimer);
-  sessionKey = null;
+export async function lockExtension(): Promise<boolean> {
+  return new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage(
+      { action: "lock" },
+      (response: { success: boolean }) => {
+        if (chrome.runtime.lastError) {
+          reject(new Error(chrome.runtime.lastError.message));
+        } else {
+          resolve(response.success);
+        }
+      }
+    );
+  });
 }
 
-export function isUnlocked(): boolean {
-  return sessionKey !== null;
+export async function isUnlocked(): Promise<boolean> {
+  return new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage(
+      { action: "isUnlocked" },
+      (response: { unlocked: boolean }) => {
+        if (chrome.runtime.lastError) {
+          reject(new Error(chrome.runtime.lastError.message));
+        } else {
+          resolve(response.unlocked);
+        }
+      }
+    );
+  });
+}
+
+export async function getSessionKey(): Promise<CryptoKey | null> {
+  return new Promise((resolve, reject) => {
+    chrome.runtime.sendMessage(
+      { action: "getSessionKey" },
+      async (response: { key: JsonWebKey | null }) => {
+        if (chrome.runtime.lastError) {
+          reject(new Error(chrome.runtime.lastError.message));
+        } else if (response.key) {
+          try {
+            const key = await crypto.subtle.importKey(
+              "jwk",
+              response.key,
+              { name: "AES-GCM" },
+              true,
+              ["encrypt", "decrypt"]
+            );
+            resolve(key);
+          } catch (error) {
+            reject(
+              new Error(`Failed to import key: ${(error as Error).message}`)
+            );
+          }
+        } else {
+          resolve(null);
+        }
+      }
+    );
+  });
 }
 
 export async function saveToStorageEncrypted(
   key: string,
   value: string,
-  passphrase?: string
+  passphrase: string
 ) {
   try {
-    let derivedKey: CryptoKey;
-    if (sessionKey && !passphrase) {
-      derivedKey = sessionKey;
-    } else if (passphrase) {
-      const salt = await generateSaltFromString(passphrase);
-      derivedKey = await deriveKey(passphrase, salt);
-    } else {
-      throw new Error("Extension is locked and no passphrase provided");
+    const unlocked = unlockExtension(passphrase);
+    if (!unlocked) {
+      throw new Error("Could not unlock");
+    }
+    let sessionKey = await getSessionKey();
+    if (!sessionKey) {
+      throw new Error("Could not get sessionKey");
     }
 
     const iv = crypto.getRandomValues(new Uint8Array(12));
@@ -39,7 +95,7 @@ export async function saveToStorageEncrypted(
     const data = encoder.encode(value);
     const encrypted = await crypto.subtle.encrypt(
       { name: "AES-GCM", iv },
-      derivedKey,
+      sessionKey,
       data
     );
     const encryptedString = btoa(
@@ -68,7 +124,7 @@ export async function saveToStorageEncrypted(
   }
 }
 
-async function deriveKey(
+export async function deriveKey(
   passphrase: string,
   salt: ArrayBuffer
 ): Promise<CryptoKey> {
@@ -98,8 +154,9 @@ async function deriveKey(
 export async function getFromStorageAndDecrypt(
   key: string
 ): Promise<string | null> {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     console.log("Checking sessionKey");
+    let sessionKey = await getSessionKey();
     if (sessionKey == null) {
       reject("locked");
       return;
@@ -137,7 +194,6 @@ export async function getFromStorageAndDecrypt(
 
         // Decode IV
         const ivArray = decodeBase64(storedData.iv);
-        // const decoder = new TextDecoder("utf-8");
 
         const decrypted = await decrypt(
           encryptedData,

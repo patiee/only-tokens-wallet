@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import bcrypt from "bcryptjs";
 
-import { write } from "../../utils";
 import { createDeterministicBcryptSalt, saveToStorageEncrypted } from "../../storage";
 
 const styles: { [key: string]: React.CSSProperties } = {
@@ -62,20 +61,11 @@ export const CreatePassword: React.FC<CreatePasswordProps> = ({
   });
 
   const setPasswordIsOk = () => {
-    write(`Validating:, { ${password}, ${password2} }`);
-
     const isLongEnough = password.length >= 8;
     const hasSpecial = /[0-9!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password);
-    write(
-      `Checks:", { ${isLongEnough}, ${hasSpecial}, match: ${
-        password === password2
-      } }`
-    );
     if (password === password2 && isLongEnough && hasSpecial) {
-      write("Validation passed, setting isOk to true");
       setIsOk(true);
     } else {
-      write("Validation failed, setting isOk to false");
       setIsOk(false);
     }
   };
@@ -83,7 +73,6 @@ export const CreatePassword: React.FC<CreatePasswordProps> = ({
   const createPassword = async () => {
     const salt = await createDeterministicBcryptSalt(password);
     const hash = await bcrypt.hash(password, salt);
-    write(`saveToStorageEncrypted ${hash} ${salt}`)
     await saveToStorageEncrypted("mnemonic", mnemonic.join(" "), hash);
     next();
   };

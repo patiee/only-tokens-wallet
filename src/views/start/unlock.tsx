@@ -7,7 +7,6 @@ import {
   lockExtension,
   unlockExtension,
 } from "../../storage";
-import { write } from "../../utils";
 
 const styles: { [key: string]: React.CSSProperties } = {
   container: {
@@ -58,13 +57,10 @@ export const Unlock: React.FC<UnlockProps> = ({ next }) => {
   const [wrongPassword, setWrongPassword] = useState(false);
 
   const unlock = async () => {
-    write(`click`)
     const salt = await createDeterministicBcryptSalt(password);
     const hash = await bcrypt.hash(password, salt);
     await unlockExtension(hash);
-    write(`unlockExtension`)
     const mnemonic = await getFromStorageAndDecrypt("mnemonic");
-    write(`unlocked mnemonic: ${mnemonic}`)
     if (mnemonic?.split(" ").length != 12) {
       lockExtension();
       setWrongPassword(true);
