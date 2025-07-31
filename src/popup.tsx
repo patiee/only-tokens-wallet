@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { openInNewWindow } from "./newWindow";
 import { StartView } from "./views/start/start";
-import { clearStorage, lockExtension } from "./storage";
+import { clearStorage, isUnlocked, lockExtension } from "./storage";
 
 const styles: { [key: string]: React.CSSProperties } = {
   popup: {
@@ -21,8 +21,16 @@ const styles: { [key: string]: React.CSSProperties } = {
 };
 
 const Popup = () => {
-  // const [isConnected, setIsConnected] = useState(false);
-  const [isStart, setIsStart] = useState(true);
+  const [unlocked, setUnlocked] = useState(true);
+
+  useEffect(() => {
+      const checkIsUnlocked = async () => {
+        const checkIsUnlocked = await isUnlocked();
+        setUnlocked(checkIsUnlocked);
+      };
+  
+      checkIsUnlocked();
+    }, [unlocked]);
 
   const handleOpenInNewWindow = () => {
     openInNewWindow(<Popup />);
@@ -31,11 +39,10 @@ const Popup = () => {
   return (
     <div style={styles["popup"]}>
       <h3 style={{ textAlign: "center" }}>wallet here</h3>
-      {isStart ? <StartView next={() => setIsStart(false)} /> : null}
+      {!unlocked ? <StartView next={() => setUnlocked(true)} /> : null}
       <button onClick={handleOpenInNewWindow}>Open Popup in New Window</button>
       <button
         onClick={() => {
-          setIsStart(!isStart);
           clearStorage();
           lockExtension();
         }}

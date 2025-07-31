@@ -1,3 +1,5 @@
+import { write } from "./utils";
+
 export async function unlockExtension(passphrase: string): Promise<boolean> {
   return new Promise((resolve, reject) => {
     chrome.runtime.sendMessage(
@@ -81,7 +83,7 @@ export async function saveToStorageEncrypted(
   passphrase: string
 ) {
   try {
-    const unlocked = unlockExtension(passphrase);
+    const unlocked = await unlockExtension(passphrase);
     if (!unlocked) {
       throw new Error("Could not unlock");
     }

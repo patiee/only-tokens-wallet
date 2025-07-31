@@ -26,7 +26,6 @@ interface StartViewProps {
 
 export const StartView: React.FC<StartViewProps> = ({ next }) => {
   const [isConnected, setIsConnected] = useState(false);
-  const [unlocked, setUnlocked] = useState(false);
   const [create, setCreate] = useState(false);
   const [isImport, setIsImport] = useState(false);
   const [newMnemonic, setNewMnemonic] = useState<string[]>([]);
@@ -37,7 +36,6 @@ export const StartView: React.FC<StartViewProps> = ({ next }) => {
       const mnemonicExists = await doesStorageKeyExist("mnemonic");
       setIsConnected(mnemonicExists);
       const checkIsUnlocked = await isUnlocked();
-      setUnlocked(checkIsUnlocked);
       if (checkIsUnlocked) {
         next();
       }
@@ -65,19 +63,12 @@ export const StartView: React.FC<StartViewProps> = ({ next }) => {
     setIsSetPassword(true);
   };
 
-  const setFinishCreatePassword = () => {
-    setIsSetPassword(false);
-    setCreate(false);
-    setIsConnected(true);
-    setUnlocked(true);
-  };
-
   return (
     <>
-      {!create && !isImport && !unlocked ? (
+      {!create && !isImport ? (
         <img src="icon128.png" style={styles["imageStyle"]} />
       ) : null}
-      {!isConnected && !unlocked ? (
+      {!isConnected ? (
         <>
           {!create && !isImport ? (
             <button onClick={createWallet} style={styles["createWalletButton"]}>
@@ -95,18 +86,17 @@ export const StartView: React.FC<StartViewProps> = ({ next }) => {
           {isSetPassowrd ? (
             <CreatePassword
               mnemonic={newMnemonic}
-              next={setFinishCreatePassword}
+              next={next}
             />
           ) : null}
         </>
-      ) : !unlocked ? (
+      ) : (
         <Unlock
           next={() => {
-            setIsConnected(true);
-            setUnlocked(true);
+            next();
           }}
         />
-      ) : null}
+      )}
     </>
   );
 };
