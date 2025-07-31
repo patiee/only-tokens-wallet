@@ -3,7 +3,7 @@ function writeOnConsole(text: any) {
 }
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  // console.log("Message received in background:", message, sender);
+  console.log("Message received in background:", message, sender);
   if (message.action === "console") {
     writeOnConsole(message.data);
     sendResponse({ result: "ok" });

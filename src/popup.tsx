@@ -20,7 +20,7 @@ const styles: { [key: string]: React.CSSProperties } = {
 };
 
 const Popup = () => {
-  const [isConnected, setIsConnected] = useState(false);
+  // const [isConnected, setIsConnected] = useState(false);
   const [isStart, setIsStart] = useState(true);
 
   const handleOpenInNewWindow = () => {
@@ -32,6 +32,7 @@ const Popup = () => {
       <h3 style={{ textAlign: "center" }}>wallet here</h3>
       {isStart ? <StartView /> : null}
       <button onClick={handleOpenInNewWindow}>Open Popup in New Window</button>
+       <button onClick={() =>setIsStart(!isStart)}>Start</button>
     </div>
   );
 };

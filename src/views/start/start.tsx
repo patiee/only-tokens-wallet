@@ -32,27 +32,23 @@ export const StartView: React.FC = () => {
 
   const createWallet = () => {
     generateMnemonic();
-    setCreate(!create);
+    setCreate(true);
   };
 
   const importWallet = () => {
-    setIsImport(!isImport);
+    setIsImport(true);
   };
 
   const setCreatePassword = () => {
-    setIsSetPassword(!isSetPassowrd);
-    setCreate(!create);
+    setIsSetPassword(true);
   };
   return (
     <>
       {/* <div style={{width: "100%"}}></div> */}
-      <img src="icon128.png" style={styles["imageStyle"]} />
-
+      {!create && !isImport ? <img src="icon128.png" style={styles["imageStyle"]} />: null}
       {!create && !isImport ? (
         <button
-          onClick={() => {
-            createWallet();
-          }}
+          onClick={createWallet}
           style={styles["createWalletButton"]}
         >
           Create wallet
@@ -60,9 +56,7 @@ export const StartView: React.FC = () => {
       ) : null}
       {!create && !isImport ? (
         <button
-          onClick={() => {
-            importWallet();
-          }}
+          onClick={importWallet}
           style={styles["createWalletButton"]}
         >
           Import wallet

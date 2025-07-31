@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { write } from "../../utils";
 
 const styles: { [key: string]: React.CSSProperties } = {
   container: {
@@ -42,19 +43,6 @@ const styles: { [key: string]: React.CSSProperties } = {
 
 interface CreatePasswordProps {
   mnemonic: string[];
-}
-
-function write(text: any) {
-  chrome.runtime.sendMessage(
-    { action: "console", data: { message: text } },
-    (response) => {
-      if (response) {
-        console.log("Response from background:", response.result);
-      } else {
-        console.log("No response from background");
-      }
-    }
-  );
 }
 
 export const CreatePassword: React.FC<CreatePasswordProps> = ({}) => {
