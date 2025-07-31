@@ -1,21 +1,32 @@
-async function saveToStorageEncrypted(key: string, value: string) {
+async function saveToStorageEncrypted(
+  key: string,
+  value: string,
+  passphrase: string
+) {
   try {
-    const { encrypted, iv, key: cryptoKey } = await encrypt(value); // Destructure the result
-    // Convert ArrayBuffer and CryptoKey to storable formats
+    const derivedKey = await deriveKey(passphrase);
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const encoder = new TextEncoder();
+    const data = encoder.encode(value);
+    const encrypted = await crypto.subtle.encrypt(
+      { name: "AES-GCM", iv },
+      derivedKey,
+      data
+    );
     const encryptedString = btoa(
       String.fromCharCode(...new Uint8Array(encrypted))
-    ); // Base64 for storage
-    const ivString = btoa(String.fromCharCode(...iv)); // Base64 for storage
-    // Export the key to a storable format (JWK)
-    const exportedKey = await crypto.subtle.exportKey("jwk", cryptoKey);
+    );
+    const ivString = btoa(String.fromCharCode(...iv));
+    const salt = btoa(
+      String.fromCharCode(...crypto.getRandomValues(new Uint8Array(16)))
+    );
 
-    // Store all parts under a single key with a structured object
     chrome.storage.local.set(
       {
         [key]: {
           encrypted: encryptedString,
           iv: ivString,
-          key: exportedKey,
+          salt, // Store salt instead of key
         },
       },
       () => {
@@ -31,8 +42,33 @@ async function saveToStorageEncrypted(key: string, value: string) {
   }
 }
 
+async function deriveKey(passphrase: string): Promise<CryptoKey> {
+  const enc = new TextEncoder();
+  const keyMaterial = await crypto.subtle.importKey(
+    "raw",
+    enc.encode(passphrase),
+    { name: "PBKDF2" },
+    false,
+    ["deriveKey"]
+  );
+  return crypto.subtle.deriveKey(
+    {
+      name: "PBKDF2",
+      salt: crypto.getRandomValues(new Uint8Array(16)),
+      iterations: 100000,
+      hash: "SHA-256",
+    },
+    keyMaterial,
+    { name: "AES-GCM", length: 256 },
+    true,
+    ["encrypt", "decrypt"]
+  );
+}
+
+// Decryption would require the passphrase to derive the key again
 async function getFromStorageAndDecrypt(
-  storageKey: string
+  storageKey: string,
+  passphrase: string
 ): Promise<string | null> {
   return new Promise((resolve, reject) => {
     chrome.storage.local.get([storageKey], async (result) => {
@@ -68,18 +104,8 @@ async function getFromStorageAndDecrypt(
           ivArray[i] = ivBinary.charCodeAt(i);
         }
 
-        console.log("Retrieved iv type:", ivArray.constructor.name);
-        console.log("Encrypted data type:", encryptedData.constructor.name);
-
-        const cryptoKey = await crypto.subtle.importKey(
-          "jwk",
-          storedData.key,
-          { name: "AES-GCM", length: 256 },
-          true,
-          ["decrypt"]
-        );
-
-        const decrypted = await decrypt(encryptedData, ivArray, cryptoKey);
+        const derivedKey = await deriveKey(passphrase); // Derive key from passphrase
+        const decrypted = await decrypt(encryptedData, ivArray, derivedKey);
         resolve(decrypted);
       } catch (error) {
         console.error("Decryption error:", error);
@@ -87,23 +113,6 @@ async function getFromStorageAndDecrypt(
       }
     });
   });
-}
-
-async function encrypt(text: any) {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(text);
-  const key = await crypto.subtle.generateKey(
-    { name: "AES-GCM", length: 256 },
-    true,
-    ["encrypt", "decrypt"]
-  );
-  const iv = crypto.getRandomValues(new Uint8Array(12));
-  const encrypted = await crypto.subtle.encrypt(
-    { name: "AES-GCM", iv },
-    key,
-    data
-  );
-  return { encrypted, iv, key }; // Store key and IV securely
 }
 
 async function decrypt(
