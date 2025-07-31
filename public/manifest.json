@@ -8,20 +8,24 @@
     "default_popup": "popup.html"
   },
   "content_scripts": [
-      {
-          "matches": ["<all_urls>"],
-          "js": ["js/vendor.js", "js/ex_script.js", "js/create_password.js", "js/create_mnemonic.js", "js/dashboard.js"]
-      }
+    {
+      "matches": ["<all_urls>"],
+      "js": [
+        "js/vendor.js",
+        "js/ex_script.js",
+        "js/create_password.js",
+        "js/create_mnemonic.js",
+        "js/dashboard.js",
+        "js/chains.js",
+        "js/cosmos.js"
+      ]
+    }
   ],
   "background": {
     "service_worker": "js/background.js"
   },
-  "permissions": [
-    "storage", "scripting"
-  ],
-  "host_permissions": [
-    "<all_urls>"
-  ],
+  "permissions": ["storage", "scripting"],
+  "host_permissions": ["<all_urls>"],
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self';"
   },
@@ -31,7 +35,7 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["js/*.js", "/*.js"], 
+      "resources": ["js/*.js", "/*.js", "chains.json"],
       "matches": ["<all_urls>"]
     }
   ]

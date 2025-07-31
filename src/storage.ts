@@ -1,5 +1,3 @@
-import { write } from "./utils";
-
 export async function unlockExtension(passphrase: string): Promise<boolean> {
   return new Promise((resolve, reject) => {
     chrome.runtime.sendMessage(
@@ -153,9 +151,7 @@ export async function deriveKey(
   );
 }
 
-export async function getFromStorageAndDecrypt(
-  key: string
-): Promise<string | null> {
+export async function getFromStorageAndDecrypt(key: string): Promise<string> {
   return new Promise(async (resolve, reject) => {
     console.log("Checking sessionKey");
     let sessionKey = await getSessionKey();
@@ -181,7 +177,7 @@ export async function getFromStorageAndDecrypt(
       if (!storedData) {
         console.log(`No data found for key: ${key}`);
         console.log(`No data found for key: ${key}`);
-        resolve(null);
+        reject("no key found");
         return;
       }
 

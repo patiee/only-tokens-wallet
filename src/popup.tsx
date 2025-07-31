@@ -20,17 +20,19 @@ const styles: { [key: string]: React.CSSProperties } = {
   },
 };
 
-const Popup = () => {
+interface PopupProps {}
+
+export const Popup: React.FC<PopupProps> = () => {
   const [unlocked, setUnlocked] = useState(true);
 
   useEffect(() => {
-      const checkIsUnlocked = async () => {
-        const checkIsUnlocked = await isUnlocked();
-        setUnlocked(checkIsUnlocked);
-      };
-  
-      checkIsUnlocked();
-    }, [unlocked]);
+    const checkIsUnlocked = async () => {
+      const checkIsUnlocked = await isUnlocked();
+      setUnlocked(checkIsUnlocked);
+    };
+
+    checkIsUnlocked();
+  }, [unlocked]);
 
   const handleOpenInNewWindow = () => {
     openInNewWindow(<Popup />);

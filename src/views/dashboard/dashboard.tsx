@@ -4,14 +4,8 @@ interface DashboardProps {
   next: () => void;
 }
 
-export const Dashboard: React.FC<DashboardProps> = ({ }) => {
+export const Dashboard: React.FC<DashboardProps> = ({}) => {
+  useEffect(() => {}, []);
 
-  useEffect(() => {
-  }, []);
-
-
-  return (
-    <>
-    </>
-  );
+  return <></>;
 };

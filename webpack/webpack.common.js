@@ -1,8 +1,9 @@
 const webpack = require("webpack");
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
-const srcDir = path.join(__dirname, "..", "src");
 const NodePolyfillPlugin = require("node-polyfill-webpack-plugin")
+
+const srcDir = path.join(__dirname, "..", "src");
 
 module.exports = {
     entry: {
@@ -14,6 +15,8 @@ module.exports = {
       start: path.join(srcDir, 'views/start/start.tsx'),
       utils: path.join(srcDir, 'utils.ts'),
       dashboard: path.join(srcDir, 'views/dashboard/dashboard.tsx'),
+      chains: path.join(srcDir, 'wallet/chains.ts'),
+      cosmos: path.join(srcDir, 'wallet/cosmos.ts'),
     },
     output: {
         path: path.join(__dirname, "../dist/js"),
@@ -21,10 +24,14 @@ module.exports = {
     },
     optimization: {
         splitChunks: {
-            name: "vendor",
-            chunks(chunk) {
-              return chunk.name !== 'background';
-            }
+            cacheGroups: {
+                vendors: {
+                    test: /[\\/]node_modules[\\/]/, 
+                    name: 'vendor', 
+                    chunks: 'all', 
+                    enforce: true,
+                },
+            },
         },
     },
     module: {
@@ -40,6 +47,7 @@ module.exports = {
         extensions: [".ts", ".tsx", ".js"],
           fallback: {
             crypto: false,
+            path: false,
             fs: false,
             stream: false,
         },
@@ -49,6 +57,9 @@ module.exports = {
             patterns: [{ from: ".", to: "../", context: "public" }],
             options: {},
         }),
-        new NodePolyfillPlugin()
-    ]
-};
+        new NodePolyfillPlugin(),
+        new webpack.ProvidePlugin({
+            Buffer: ['buffer', 'Buffer'],
+        }),
+    ],
+}

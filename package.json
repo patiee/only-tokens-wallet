@@ -8,21 +8,19 @@
     "build": "webpack --config webpack/webpack.prod.js",
     "clean": "rimraf dist",
     "test": "npx jest",
-    "style": "prettier --write \"src/**/*.{ts,tsx}\""
+    "style": "prettier --write \"src/**/*.{ts,tsx}\" \"types/*\" \"public/chains.json\" \"public/manifest.json\""
   },
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@cosmjs/proto-signing": "^0.34.0",
     "assert": "^2.1.0",
     "bcryptjs": "^3.0.2",
     "bip39": "^3.1.0",
-    "buffer": "^6.0.3",
-    "crypto-browserify": "^3.12.1",
     "node-polyfill-webpack-plugin": "^4.1.0",
     "process": "^0.11.10",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "stream-browserify": "^3.0.0"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
@@ -31,14 +29,18 @@
     "@types/jest": "^29.5.0",
     "@types/react": "^18.0.29",
     "@types/react-dom": "^18.0.11",
+    "buffer": "^6.0.3",
     "copy-webpack-plugin": "^9.1.0",
+    "crypto-browserify": "^3.12.1",
     "glob": "^7.1.6",
     "jest": "^29.5.0",
     "prettier": "^2.2.1",
     "rimraf": "^3.0.2 ",
+    "stream-browserify": "^3.0.0",
     "ts-jest": "^29.1.0",
     "ts-loader": "^8.4.0",
     "typescript": "^5.8.3",
+    "vm-browserify": "^1.1.2",
     "webpack": "^5.101.0",
     "webpack-cli": "^4.10.0",
     "webpack-merge": "^5.0.0"

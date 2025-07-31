@@ -84,10 +84,7 @@ export const StartView: React.FC<StartViewProps> = ({ next }) => {
             <CreateWallet mnemonic={newMnemonic} next={setCreatePassword} />
           ) : null}
           {isSetPassowrd ? (
-            <CreatePassword
-              mnemonic={newMnemonic}
-              next={next}
-            />
+            <CreatePassword mnemonic={newMnemonic} next={next} />
           ) : null}
         </>
       ) : (

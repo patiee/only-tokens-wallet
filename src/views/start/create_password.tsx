@@ -78,7 +78,7 @@ export const CreatePassword: React.FC<CreatePasswordProps> = ({
     const salt = await createDeterministicBcryptSalt(password);
     const hash = await bcrypt.hash(password, salt);
     await saveToStorageEncrypted("mnemonic", mnemonic.join(" "), hash);
-    await unlockExtension(hash)
+    await unlockExtension(hash);
     next();
   };
 
