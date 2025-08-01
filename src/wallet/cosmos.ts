@@ -3,7 +3,7 @@ import { getFromStorageAndDecrypt, isUnlocked } from "../storage";
 import { write } from "../utils";
 import { loadChains } from "./chains";
 
-const cosmos = {
+const cosmos: Cosmos = {
   async enable(chainId: string): Promise<void> {
     return new Promise(async (resolve, reject) => {
       const chains = await loadChains();
@@ -48,3 +48,5 @@ if (!window.only) {
 } else {
   console.warn("window.only.cosmos already exists. Overwriting is skipped.");
 }
+
+// window.postMessage({ type: "ONLY_COSMOS_READY" }, "*");

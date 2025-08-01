@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { openInNewWindow } from "./newWindow";
 import { StartView } from "./views/start/start";
 import { clearStorage, isUnlocked, lockExtension } from "./storage";
+import { Dashboard } from "./views/dashboard/dashboard";
 
 const styles: { [key: string]: React.CSSProperties } = {
   popup: {
@@ -41,7 +42,7 @@ export const Popup: React.FC<PopupProps> = () => {
   return (
     <div style={styles["popup"]}>
       <h3 style={{ textAlign: "center" }}>wallet here</h3>
-      {!unlocked ? <StartView next={() => setUnlocked(true)} /> : null}
+      {!unlocked ? <StartView next={() => setUnlocked(true)} /> : <Dashboard />}
       <button onClick={handleOpenInNewWindow}>Open Popup in New Window</button>
       <button
         onClick={() => {

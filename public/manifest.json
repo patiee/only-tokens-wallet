@@ -20,13 +20,14 @@
         "js/cosmos.js",
         "js/dogecoin.js",
         "js/evm.js"
-      ]
+      ],
+       "run_at": "document_start"
     }
   ],
   "background": {
     "service_worker": "js/background.js"
   },
-  "permissions": ["storage", "scripting"],
+  "permissions": ["storage", "scripting", "activeTab", "permissions"],
   "host_permissions": ["<all_urls>"],
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self';"
@@ -37,8 +38,9 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["js/*.js", "/*.js", "chains.json"],
+      "resources": ["js/*.js", "/*.js", "chains.json", "wallet/inject.ts"],
       "matches": ["<all_urls>"]
     }
-  ]
+  ],
+  "optional_host_permissions": ["*://*/*"]
 }

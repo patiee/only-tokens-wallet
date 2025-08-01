@@ -5,7 +5,8 @@ type Message =
   | { action: "unlock"; passphrase: string }
   | { action: "lock" }
   | { action: "isUnlocked" }
-  | { action: "getSessionKey" };
+  | { action: "getSessionKey" }
+  | { action: "ONLY_COSMOS_ENABLE"; chainId: string };
 
 let sessionKey: CryptoKey | null = null;
 let lockTimer: NodeJS.Timeout | null = null;
@@ -84,6 +85,26 @@ chrome.runtime.onMessage.addListener(
             : null,
         });
       })();
+      return true;
+    } else if (message.action === "ONLY_COSMOS_ENABLE") {
+      const chainId = message.chainId;
+      const origin = sender.origin || "";
+      chrome.permissions.request({ origins: [origin] }, (granted: boolean) => {
+        if (granted) {
+          console.log(`Permission granted for ${origin}`);
+          chrome.runtime.sendMessage({
+            type: "ONLY_COSMOS_ENABLE_RESPONSE",
+            success: true,
+            data: { chainId },
+          });
+        } else {
+          chrome.runtime.sendMessage({
+            type: "ONLY_COSMOS_ENABLE_RESPONSE",
+            success: false,
+            error: "Permission denied",
+          });
+        }
+      });
       return true;
     }
     return true; // Default return for async responses

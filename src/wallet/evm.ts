@@ -29,7 +29,7 @@ const evm = {
           return reject(new Error("Unsupported chain"));
         }
         const mnemonic = await getFromStorageAndDecrypt("mnemonic");
-        resolve("");
+        resolve(mnemonic);
       } catch (err) {
         reject(new Error("Failed to create signer: " + err.message));
       }
