@@ -40,7 +40,7 @@ const evm = {
 if (!window.only) {
   window.only = { evm };
 } else if (!window.only.evm) {
-  window.only.dogecoin = evm;
+  window.only.evm = evm;
 } else {
   console.warn("window.only.evm already exists. Overwriting is skipped.");
 }
