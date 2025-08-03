@@ -4,7 +4,8 @@
     "type": "cosmos",
     "config": {
       "prefix": "osmo"
-    }
+    },
+    "rpc": "https://osmosis-testnet-rpc.polkachu.com/"
   },
   {
     "chainId": "568",
@@ -19,10 +20,17 @@
       "pubKeyHash": "0x71",
       "scriptHash": "0xc4",
       "wif": "0xf1"
-    }
+    },
+    "rpc": "https://doge-electrs-testnet-demo.qed.me"
   },
   {
     "chainId": "80002",
-    "type": "evm"
+    "type": "evm",
+    "rpc": "https://rpc-amoy.polygon.technology"
+  },
+  {
+    "chainId": "11155111",
+    "type": "evm",
+    "rpc": "https://ethereum-sepolia-rpc.publicnode.com"
   }
 ]

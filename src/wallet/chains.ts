@@ -2,7 +2,10 @@ import { write } from "../utils";
 
 interface ChainConfig {
   chainId: string;
-  prefix: string;
+  type: string;
+  prefix?: string;
+  config?: any;
+  rpc?: string;
 }
 
 interface ChainMap {

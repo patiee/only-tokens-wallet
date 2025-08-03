@@ -50,7 +50,8 @@
         "js/*.js",
         "/*.js",
         "chains.json",
-        "js/cosmos-inject.js"
+        "js/cosmos-inject.js",
+        "js/evm-inject.js"
       ],
       "matches": [
         "<all_urls>"

@@ -14,9 +14,11 @@
   "license": "MIT",
   "dependencies": {
     "@cosmjs/proto-signing": "^0.34.0",
+    "@ethersproject/hdnode": "^5.8.0",
     "assert": "^2.1.0",
     "bcryptjs": "^3.0.2",
     "bip39": "^3.1.0",
+    "ethers": "^5.7.2",
     "node-polyfill-webpack-plugin": "^4.1.0",
     "process": "^0.11.10",
     "react": "^18.2.0",
