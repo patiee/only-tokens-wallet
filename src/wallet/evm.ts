@@ -315,12 +315,12 @@ const ethereum: any = {
           // Create wallet and sign message
           const mnemonic = await getFromStorageAndDecrypt("mnemonic");
           const wallet = ethers.Wallet.fromMnemonic(mnemonic);
-          const signature = await wallet.signMessage(message);
 
-          // For eth_sign, we need to return the keccak256 hash of the message
+          // For eth_sign: hash the message first, then sign the hash
           const messageHash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(message));
+          const ethSignSignature = await wallet.signMessage(ethers.utils.arrayify(messageHash));
 
-          return messageHash;
+          return ethSignSignature;
         } catch (error) {
           throw new Error(`Failed to sign message: ${error.message}`);
         }
